@@ -4,11 +4,8 @@ import { createBrowserHistory } from 'history';
 import { Provider } from 'react-redux';
 import { store } from "./store.js";
 
-import injectTapEventPlugin from 'react-tap-event-plugin';
-
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 
 import App from "./app.js";
 import {CreateTweetContainerCon as CreateTweetContainer} from "./create.js";
@@ -17,12 +14,13 @@ import {TweetAndRepliesContainerCon as TweetAndRepliesContainer} from "./tweet-a
 import {TweetsContainerCon as TweetsContainer} from "./tweets.js";
 import {UsersContainerCon as UsersContainer} from "./users.js";
 
-injectTapEventPlugin();
 const history = createBrowserHistory();
+
+const theme = createMuiTheme();
 
 export default () => (
     <Provider store={store}>
-        <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <MuiThemeProvider theme={theme}>
             <BrowserRouter history={history}>
                 <div>
                      <App />

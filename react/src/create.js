@@ -1,10 +1,10 @@
 import * as React from "react";
 import {connect} from "react-redux";
 
-import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardActions, CardTitle, CardText} from 'material-ui/Card';
-import TextField from 'material-ui/TextField';
-import Snackbar from 'material-ui/Snackbar';
+import Button from '@material-ui/core/Button';
+import {Card, CardActions, CardHeader, CardContent} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 import {createTweet, defaultStateTweet} from "./actions.js";
@@ -51,19 +51,18 @@ class CreateTweet extends React.Component {
     render() {
         return (
             <Card>
-                <CardTitle title="Create new tweet!" />
-                <CardText>
+                <CardHeader>Create new tweet!</CardHeader>
+                <CardContent>
                     <TextField hintText="Tweet Field"
                                multiLine={true}
                                rows={3}
                                onChange={this.props.actions.onEditText}
                     />
-                </CardText>
+                </CardContent>
                 <CardActions>
-                    <RaisedButton
+                    <Button
                         disabled={this.props.tweet.requestProcess}
-                        label="Publish"
-                        onClick={this.props.actions.onCreateTweet} />
+                        onClick={this.props.actions.onCreateTweet} >Publish</Button>
                 </CardActions>
 
                 <Snackbar

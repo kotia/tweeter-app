@@ -4,9 +4,9 @@ let express = require('express');
 let router = express.Router();
 
 let redis = require('redis');
-let db = redis.createClient();
+let db = redis.createClient(process.env.REDIS_URL);
 
-router.get('/getUsers', (req, res) => {
+router.get('/api/getUsers', (req, res) => {
     db.smembers('users', (err, keys) => {
         if (!keys || !keys.length) {
             res.json([]);
@@ -29,7 +29,7 @@ router.get('/getUsers', (req, res) => {
     });
 });
 
-router.get('/getTweets', (req, res) => {
+router.get('/api/getTweets', (req, res) => {
     db.smembers('tweets', (err, keys) => {
         let tweetsResp = [];
         if (!keys || !keys.length) {
@@ -57,7 +57,7 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
-router.post('/login', (req, res) => {
+router.post('/api/login', (req, res) => {
     let params = req.body;
     let isFound = false;
     db.smembers('users', (err, keys) => {
@@ -92,7 +92,7 @@ router.post('/login', (req, res) => {
 });
 
 
-router.post('/register', (req, res) => {
+router.post('/api/register', (req, res) => {
     let userId = 0;
     let params = req.body;
 
@@ -139,7 +139,7 @@ router.post('/register', (req, res) => {
     });
 });
 
-router.post('/addTweet', (req, res) => {
+router.post('/api/addTweet', (req, res) => {
     let tweetId = 0;
     let params = req.body;
 
@@ -176,7 +176,7 @@ router.post('/addTweet', (req, res) => {
     });
 });
 
-router.post('/editTweet', (req, res) => {
+router.post('/api/editTweet', (req, res) => {
     let text = req.body.text;
     let tweetId = req.body.id;
 
@@ -186,7 +186,7 @@ router.post('/editTweet', (req, res) => {
     });
 });
 
-router.post('/removeTweet', (req, res) => {
+router.post('/api/removeTweet', (req, res) => {
     let id = req.body.id;
     db.del('tweet_' + id, () => {
         db.srem('tweets', id, () => {

@@ -14,8 +14,8 @@ export function tweeterMiddleware(store) {
 
         if (action.type === actions.INIT_APP) {
             Promise.all([
-                fetch('/getUsers', {method: 'GET'}),
-                fetch('/getTweets', {method: 'GET'})
+                fetch('/api/getUsers', {method: 'GET'}),
+                fetch('/api/getTweets', {method: 'GET'})
             ]).then((resp) => Promise.all([resp[0].json(), resp[1].json()])
             ).then((resp) => {
                 store.dispatch(actions.receiveUsers(resp[0]));
@@ -28,7 +28,7 @@ export function tweeterMiddleware(store) {
                 }
             });
         } else if (action.type === actions.LOGIN) {
-            fetch('/login', {
+            fetch('/api/login', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json',
@@ -47,7 +47,7 @@ export function tweeterMiddleware(store) {
                 }
             });
         } else if (action.type === actions.REGISTER) {
-            fetch('/register', {
+            fetch('/api/register', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json',
@@ -69,7 +69,7 @@ export function tweeterMiddleware(store) {
         } else if (action.type === actions.LOGOUT) {
             removeLogin();
         } else if (action.type === actions.CREATE_TWEET) {
-            fetch('/addTweet', {
+            fetch('/api/addTweet', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json',
@@ -84,7 +84,7 @@ export function tweeterMiddleware(store) {
                 store.dispatch(actions.createTweetSuccess(resp));
             });
         } else if (action.type === actions.REMOVE_TWEET) {
-            fetch('/removeTweet', {
+            fetch('/api/removeTweet', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json',
@@ -98,7 +98,7 @@ export function tweeterMiddleware(store) {
             });
 
         } else if (action.type === actions.EDIT_TWEET) {
-            fetch('/editTweet', {
+            fetch('/api/editTweet', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json',

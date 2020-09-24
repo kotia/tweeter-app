@@ -3,14 +3,14 @@ import {editTweet, removeTweet, createTweet, defaultStateTweet} from "./actions.
 import {connect} from "react-redux";
 import { Link } from 'react-router-dom'
 
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
-import IconButton from 'material-ui/IconButton';
-import ActionDelete from 'material-ui/svg-icons/action/delete';
-import EditorModeEdit from 'material-ui/svg-icons/editor/mode-edit';
-import AvRepeat from 'material-ui/svg-icons/av/repeat';
-import TextField from 'material-ui/TextField';
-import Snackbar from 'material-ui/Snackbar';
+import {Card, CardActions, CardHeader, CardContent} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import ActionDelete from '@material-ui/icons/Delete';
+import EditorModeEdit from '@material-ui/icons/Edit';
+import AvRepeat from '@material-ui/icons/Repeat';
+import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
 
 class TweetContainer extends React.Component {
     constructor(props){
@@ -74,7 +74,6 @@ class TweetContainer extends React.Component {
         let repliedText;
 
         if (this.props.tweet.tweetId) {
-
             let repliedTweet = this.props.tweets.find((tweet) => tweet.id === this.props.tweet.tweetId);
             if (repliedTweet) {
                 repliedText = repliedTweet.text;
@@ -122,14 +121,12 @@ class Tweet extends React.Component {
             textBlock = (
                 <div>
                     <TextField hintText="Edit Tweet"
-                               value={this.props.editedText}
                                onChange={this.props.actions.onEditEdit}
                                multiLine={true}
-                               rows={3} /> <br />
-                    <RaisedButton disabled={this.props.tweet.editing}
-                                  primary={true}
-                                  label="Save edited"
-                                  onClick={this.props.actions.onEdit} />
+                               rows={3} >{this.props.editedText}</TextField> <br />
+                    <Button disabled={this.props.tweet.editing}
+                            primary
+                            onClick={this.props.actions.onEdit} >Save Edited</Button>
                 </div>
             );
         }
@@ -139,10 +136,12 @@ class Tweet extends React.Component {
             <Card
                 className="users-card"
                 expanded = {this.props.expanded}>
-                <CardHeader
-                    title={<Link to={"/tweet/" + this.props.tweet.id}>tweet #{this.props.tweet.id}</Link>}
-                    subtitle={<Link to={"/tweets/" + this.props.author.id}>By {this.props.author.username}</Link>}
-                />
+                <CardHeader>
+                    <Link to={"/tweet/" + this.props.tweet.id}>tweet #{this.props.tweet.id}</Link>
+                    <br />
+                    <Link to={"/tweets/" + this.props.author.id}>By {this.props.author.username}</Link>
+
+                </CardHeader>
 
                 <CardActions>
                     <IconButton
@@ -160,27 +159,26 @@ class Tweet extends React.Component {
                         <EditorModeEdit />
                     </IconButton>
                 </CardActions>
-                <CardText>
+                <CardContent>
                     {textBlock}
                     {rtBlock}
-                </CardText>
+                </CardContent>
                 <CardActions>
-                    <RaisedButton
-                        primary={true}
-                        label="reply"
-                        onClick={this.props.actions.onToggleExpand} />
+                    <Button
+                        primary
+                        onClick={this.props.actions.onToggleExpand} >reply</Button>
                 </CardActions>
-                <CardText expandable={true}>
+                <CardContent expandable={true}>
                     <TextField hintText="Reply Field"
                                onChange={this.props.actions.onEditReply}
                                multiLine={true}
                                rows={3} />
-                </CardText>
+                </CardContent>
                 <CardActions expandable={true}>
-                    <RaisedButton
+                    <Button
                         disabled={this.props.tweet.editing}
                         onClick={this.props.actions.onReply}
-                        secondary={true} label="Post reply" />
+                        secondary >Post reply</Button>
                 </CardActions>
 
                 <Snackbar

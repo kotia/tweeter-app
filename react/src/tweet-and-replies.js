@@ -2,7 +2,7 @@ import * as React from "react";
 import {connect} from "react-redux";
 
 import {TweetContainerCon as TweetContainer} from "./tweet.js";
-import AvRepeat from 'material-ui/svg-icons/av/repeat';
+import AvRepeat from '@material-ui/icons/Repeat';
 
 class TweetAndRepliesContainer extends React.Component {
     constructor(props){

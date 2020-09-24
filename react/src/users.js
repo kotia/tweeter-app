@@ -1,8 +1,8 @@
 import * as React from "react";
 import {connect} from "react-redux";
 
-import {Card, CardActions, CardHeader} from 'material-ui/Card';
-import RaisedButton from 'material-ui/RaisedButton';
+import {Card, CardActions, CardHeader} from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 
 
@@ -26,13 +26,10 @@ class Users extends React.Component {
     render() {
         let usersCards = this.props.users.map((user) =>
             <Card className={"users-card"} key={user.id}>
-                <CardHeader
-                    title={user.username}
-                    subtitle={"#" + user.id}
-                />
+                <CardHeader>{user.username}, {"#" + user.id}</CardHeader>
                 <CardActions>
                     <Link to={'/tweets/' + user.id}>
-                        <RaisedButton primary={true} label="See the tweets"/>
+                        <Button primary>See the tweets</Button>
                     </Link>
                 </CardActions>
             </Card>

@@ -10,7 +10,6 @@ class TweetsContainer extends React.Component {
     }
 
     render() {
-        console.log(this.props);
         const filteredTweets = this.props.tweets.filter((tweet) => tweet.userId === this.props.match.params.userId);
 
         return (

@@ -3,9 +3,12 @@ import {login, register} from "./actions.js";
 
 import {connect} from "react-redux";
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import TextField from 'material-ui/TextField';
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent from "@material-ui/core/CardContent";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 class LoginContainer extends React.Component {
     constructor(props){
@@ -65,8 +68,8 @@ class Login extends React.Component {
         }
         return (
             <Card className = "login-form">
-                <CardTitle title="Please, Log in or Register" />
-                <CardText>
+                <CardHeader>Please, Log in or Register</CardHeader>
+                <CardContent>
                     <TextField
                         onChange={this.props.actions.onChangeUsername}
                         className="login-field"
@@ -77,16 +80,16 @@ class Login extends React.Component {
                         className="password-field"
                         floatingLabelText="Password"/>
                     {errorBlock}
-                </CardText>
+                </CardContent>
                 <CardActions>
-                    <FlatButton
+                    <Button
                         className="login-button"
                         disabled={this.props.user.requestProcess}
-                        onClick={this.props.actions.login} label="Log In" />
-                    <FlatButton
+                        onClick={this.props.actions.login} label="Log In" >Log In</Button>
+                    <Button
                         className="password-button"
                         disabled={this.props.user.requestProcess}
-                        onClick={this.props.actions.register} label="Register" />
+                        onClick={this.props.actions.register} label="Register" >Register</Button>
                 </CardActions>
             </Card>
         );
