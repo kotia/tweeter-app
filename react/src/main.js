@@ -25,13 +25,13 @@ export default () => (
                 <div>
                      <App />
                      <Switch>
-                     <Route exact path="/" component={UsersContainer} />
-                     <Route path="/login" component={LoginContainer} />
-                     <Route path="/create" component={CreateTweetContainer} />
-                     <Route path="/tweets/:userId" component={TweetsContainer} />
-                     <Route path="/tweet/:tweetId" component={TweetAndRepliesContainer} />
-                     <Redirect from="/tweets" to="/" />
-                     <Redirect from="/tweet" to="/" />
+                         <Route exact path="/" component={UsersContainer} />
+                         <Route path="/login" component={LoginContainer} />
+                         <Route path="/create" component={CreateTweetContainer} />
+                         <Route path="/tweets/:userId" component={TweetsContainer} />
+                         <Route path="/tweet/:tweetId" component={TweetAndRepliesContainer} />
+                         <Redirect from="/tweets" to="/" />
+                         <Redirect from="/tweet" to="/" />
                      </Switch>
                 </div>
             </BrowserRouter>
