@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 
 
 import { Link } from 'react-router-dom';
@@ -7,57 +7,51 @@ import Button from '@material-ui/core/Button';
 import { connect } from "react-redux";
 import {logout, initApp} from './actions.js';
 
-class AppContainer extends Component {
-    componentDidMount() {
+const AppContainer = props => {
+    useEffect(() => {
         this.props.onInit();
-    }
+    });
 
-    render() {
-        return (
-            <App user={this.props.user}
-                 users={this.props.users}
-                 children={this.props.children}
-                 logout={this.props.onLogout}
-            />
-        );
-    }
-}
 
-class App extends Component {
-    constructor(props){
-        super(props);
-    }
+    return (
+        <App user={props.user}
+             users={props.users}
+             children={props.children}
+             logout={props.onLogout}
+        />
+    );
 
-    render() {
+};
 
+const App = props => {
         let username, topbarGreeting;
 
-        if (this.props.user.id < 0 || !this.props.users.length) {
-            topbarGreeting = <Link to="/login"><Button primary={true}>Login or register</Button></Link>;
+        if (props.user.id < 0 || !props.users.length) {
+            topbarGreeting = <Link to="/login"><Button primary>Login or register</Button></Link>;
         } else {
-            username = this.props.users.find((user) => user.id === this.props.user.id).username;
+            username = props.users.find(user => user.id === props.user.id).username;
             topbarGreeting = (
                 <div>
                     <div
                         className="username-greeting"
-                    >{'welcome ' + username + ' #' + this.props.user.id}</div>
+                    >{`welcome ${username} #${props.user.id}`}</div>
                     <Link to="/">
                         <Button
                             className="users-list-button"
-                            primary={true}
+                            primary
                             >Go to users list</Button>
                     </Link>
                     <Link to="/create">
                         <Button
                             className="margined-button create-tweet-button"
-                            secondary={true}
+                            secondary
                         >Create tweet</Button>
                     </Link>
                     <Link to="/">
                         <Button
-                            secondary={true}
+                            secondary
                             className="logout-button"
-                            onClick={this.props.logout}
+                            onClick={props.logout}
                             >Logout</Button>
                     </Link>
                 </div>
@@ -74,15 +68,14 @@ class App extends Component {
                 {this.props.children}
             </div>
         );
-    }
-}
+};
 
-let mapStateToProps = (store) => ({
+const mapStateToProps = store => ({
     user: store.user,
     users: store.users
 });
 
-let mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
     onLogout: () => dispatch(logout()),
     onInit: () => dispatch(initApp())
 });
