@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
 
-
-import { Link } from 'react-router-dom';
-import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
+import { useNavigate } from 'react-router-dom';
+import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
 import { connect } from "react-redux";
 import {logout, initApp} from './actions.js';
 
 const AppContainer = props => {
-    useEffect(() => {
-        this.props.onInit();
-    });
+    console.log(props);
 
+    useEffect(() => {
+        props.onInit();
+    }, []);
 
     return (
         <App user={props.user}
@@ -26,8 +26,10 @@ const AppContainer = props => {
 const App = props => {
         let username, topbarGreeting;
 
+        const navigate = useNavigate();
+
         if (props.user.id < 0 || !props.users.length) {
-            topbarGreeting = <Link to="/login"><Button primary>Login or register</Button></Link>;
+            topbarGreeting = <Button onClick={() => navigate('/login')} primary="true">Login or register</Button>;
         } else {
             username = props.users.find(user => user.id === props.user.id).username;
             topbarGreeting = (
@@ -35,25 +37,26 @@ const App = props => {
                     <div
                         className="username-greeting"
                     >{`welcome ${username} #${props.user.id}`}</div>
-                    <Link to="/">
+
                         <Button
+                            onClick={() => navigate('/')}
                             className="users-list-button"
-                            primary
+                            variant='contained'
                             >Go to users list</Button>
-                    </Link>
-                    <Link to="/create">
+
                         <Button
+                            onClick={() => navigate('/create')}
                             className="margined-button create-tweet-button"
-                            secondary
+                            variant='outlined'
                         >Create tweet</Button>
-                    </Link>
-                    <Link to="/">
                         <Button
-                            secondary
+                            variant='outlined'
                             className="logout-button"
-                            onClick={props.logout}
+                            onClick={() => {
+                                props.logout();
+                                navigate('/');
+                            }}
                             >Logout</Button>
-                    </Link>
                 </div>
             )
         }
@@ -65,7 +68,7 @@ const App = props => {
                         {topbarGreeting}
                     </div>
                 </Toolbar>
-                {this.props.children}
+                {props.children}
             </div>
         );
 };

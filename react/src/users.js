@@ -1,36 +1,20 @@
 import * as React from "react";
 import {connect} from "react-redux";
 
-import {Card, CardActions, CardHeader} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
+import {Card, CardActions, CardHeader} from '@mui/material';
+import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 
+const UsersContainer = ({users}) => <Users users={users} />;
 
-class UsersContainer extends React.Component {
-    constructor(props){
-        super(props);
-    }
+const Users = (props) => {
+    const navigate = useNavigate();
 
-    render() {
-        return (
-            <Users users={this.props.users} />
-        );
-    }
-}
-
-class Users extends React.Component {
-    constructor(props){
-        super(props);
-    }
-
-    render() {
-        let usersCards = this.props.users.map((user) =>
+        const usersCards = props.users.map((user) =>
             <Card className={"users-card"} key={user.id}>
                 <CardHeader>{user.username}, {"#" + user.id}</CardHeader>
                 <CardActions>
-                    <Link to={'/tweets/' + user.id}>
-                        <Button primary>See the tweets</Button>
-                    </Link>
+                    <Button onClick={() => navigate('/tweets/' + user.id)} variant='contained'>See the tweets</Button>
                 </CardActions>
             </Card>
         );
@@ -40,13 +24,11 @@ class Users extends React.Component {
                 {usersCards ? usersCards : "Sorry, no users. Try to register one"}
             </div>
         );
-    }
-}
 
+};
 
-
-let mapStateToProps = (store) => ({
+const mapStateToProps = (store) => ({
     users: store.users
 });
 
-export const UsersContainerCon = connect(mapStateToProps)(UsersContainer);
+export default connect(mapStateToProps)(UsersContainer);

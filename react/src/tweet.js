@@ -3,14 +3,14 @@ import {editTweet, removeTweet, createTweet, defaultStateTweet} from "./actions.
 import {connect} from "react-redux";
 import { Link } from 'react-router-dom'
 
-import {Card, CardActions, CardHeader, CardContent} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import ActionDelete from '@material-ui/icons/Delete';
-import EditorModeEdit from '@material-ui/icons/Edit';
-import AvRepeat from '@material-ui/icons/Repeat';
-import TextField from '@material-ui/core/TextField';
-import Snackbar from '@material-ui/core/Snackbar';
+import {Card, CardActions, CardHeader, CardContent} from '@mui/material';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import ActionDelete from '@mui/icons-material/Delete';
+import EditorModeEdit from '@mui/icons-material/Edit';
+import AvRepeat from '@mui/icons-material/Repeat';
+import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
 
 class TweetContainer extends React.Component {
     constructor(props){
@@ -125,7 +125,7 @@ class Tweet extends React.Component {
                                multiLine={true}
                                rows={3} >{this.props.editedText}</TextField> <br />
                     <Button disabled={this.props.tweet.editing}
-                            primary
+                            variant='contained'
                             onClick={this.props.actions.onEdit} >Save Edited</Button>
                 </div>
             );
@@ -165,7 +165,7 @@ class Tweet extends React.Component {
                 </CardContent>
                 <CardActions>
                     <Button
-                        primary
+                        variant='contained'
                         onClick={this.props.actions.onToggleExpand} >reply</Button>
                 </CardActions>
                 <CardContent expandable={true}>
@@ -178,7 +178,7 @@ class Tweet extends React.Component {
                     <Button
                         disabled={this.props.tweet.editing}
                         onClick={this.props.actions.onReply}
-                        secondary >Post reply</Button>
+                        variant='outlined' >Post reply</Button>
                 </CardActions>
 
                 <Snackbar

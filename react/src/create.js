@@ -1,10 +1,10 @@
 import * as React from "react";
 import {connect} from "react-redux";
 
-import Button from '@material-ui/core/Button';
-import {Card, CardActions, CardHeader, CardContent} from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-import Snackbar from '@material-ui/core/Snackbar';
+import Button from '@mui/material/Button';
+import {Card, CardActions, CardHeader, CardContent} from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
 
 
 import {createTweet, defaultStateTweet} from "./actions.js";
