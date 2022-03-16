@@ -1,8 +1,8 @@
-import React, {useState} from "react";
-import {login, register} from "./actions.js";
-
+import React, {useState, useEffect} from "react";
 import {connect} from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
+import styled from "@emotion/styled";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardHeader from "@mui/material/CardHeader";
@@ -10,10 +10,22 @@ import CardContent from "@mui/material/CardContent";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
+import {login, register} from "./actions.js";
+
 const LoginContainer = props => {
+
+    const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [previousUserId, setPreviousUserId] = useState(props.user.id);
+
+    useEffect(() => {
+        setPreviousUserId(props.user.id);
+        if (+previousUserId < 0 && +props.user.id >= 0) {
+            navigate('/');
+        }
+    }, [props.user]);
 
     const login = () => {
         if (username && password) {
@@ -49,22 +61,23 @@ const LoginContainer = props => {
 };
 
 const Login = props => {
-    const errorBlock = <p className="error-text">{props.user.errorText}</p>;
+
     return (
         <Card className="login-form">
-            <CardHeader>Please, Log in or Register</CardHeader>
-            <CardContent>
+            <CardHeader title="Please, Log in or Register" />
+            <TextFields>
                 <TextField
+                    label="Username"
                     onChange={props.onChangeUsername}
-                    className="login-field"
-                    floatingLabelText="Username"/>
+                    className="login-field"/>
                 <br />
                 <TextField
+                    label="Password"
+                    type="password"
                     onChange={props.onChangePassword}
-                    className="password-field"
-                    floatingLabelText="Password"/>
-                {props.user.fail && errorBlock}
-            </CardContent>
+                    className="password-field"/>
+                {props.user.fail && <p className="error-text">{props.user.errorText}</p>}
+            </TextFields>
             <CardActions>
                 <Button
                     className="login-button"
@@ -78,6 +91,12 @@ const Login = props => {
         </Card>
     );
 };
+
+const TextFields = styled(CardContent)`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
 
 const mapStateToProps = store => ({
     user: store.user

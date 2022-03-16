@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
-
-import { useNavigate } from 'react-router-dom';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
 import { connect } from "react-redux";
+import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import {logout, initApp} from './actions.js';
 
 const AppContainer = props => {
-    console.log(props);
 
     useEffect(() => {
         props.onInit();
@@ -62,14 +59,10 @@ const App = props => {
         }
 
         return (
-            <div>
-                <Toolbar>
-                    <div>
-                        {topbarGreeting}
-                    </div>
-                </Toolbar>
+            <>
+                {topbarGreeting}
                 {props.children}
-            </div>
+            </>
         );
 };
 

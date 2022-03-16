@@ -3,7 +3,7 @@ import {editTweet, removeTweet, createTweet, defaultStateTweet} from "./actions.
 import {connect} from "react-redux";
 import { Link } from 'react-router-dom'
 
-import {Card, CardActions, CardHeader, CardContent} from '@mui/material';
+import {Card, CardActions, CardHeader, CardContent, Collapse} from '@mui/material';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ActionDelete from '@mui/icons-material/Delete';
@@ -120,9 +120,9 @@ class Tweet extends React.Component {
         if (this.props.editing) {
             textBlock = (
                 <div>
-                    <TextField hintText="Edit Tweet"
+                    <TextField label="Edit Tweet"
                                onChange={this.props.actions.onEditEdit}
-                               multiLine={true}
+                               multiline={true}
                                rows={3} >{this.props.editedText}</TextField> <br />
                     <Button disabled={this.props.tweet.editing}
                             variant='contained'
@@ -134,14 +134,14 @@ class Tweet extends React.Component {
 
         return (
             <Card
-                className="users-card"
-                expanded = {this.props.expanded}>
-                <CardHeader>
-                    <Link to={"/tweet/" + this.props.tweet.id}>tweet #{this.props.tweet.id}</Link>
-                    <br />
-                    <Link to={"/tweets/" + this.props.author.id}>By {this.props.author.username}</Link>
-
-                </CardHeader>
+                className="users-card">
+                <CardHeader title={(
+                    <>
+                        tweet #<Link to={"/tweet/" + this.props.tweet.id}>{this.props.tweet.id}</Link>
+                        <br />
+                        By <Link to={"/tweets/" + this.props.author.id}>{this.props.author.username}</Link>
+                    </>
+                )} />
 
                 <CardActions>
                     <IconButton
@@ -168,18 +168,21 @@ class Tweet extends React.Component {
                         variant='contained'
                         onClick={this.props.actions.onToggleExpand} >reply</Button>
                 </CardActions>
-                <CardContent expandable={true}>
-                    <TextField hintText="Reply Field"
-                               onChange={this.props.actions.onEditReply}
-                               multiLine={true}
-                               rows={3} />
-                </CardContent>
-                <CardActions expandable={true}>
-                    <Button
-                        disabled={this.props.tweet.editing}
-                        onClick={this.props.actions.onReply}
-                        variant='outlined' >Post reply</Button>
-                </CardActions>
+                <Collapse in = {this.props.expanded}>
+                        <CardContent>
+                            <TextField label="Reply Field"
+                                       onChange={this.props.actions.onEditReply}
+                                       multiline={true}
+                                       rows={3} />
+                        </CardContent>
+                        <CardContent>
+                            <Button
+                                disabled={this.props.tweet.editing}
+                                onClick={this.props.actions.onReply}
+                                variant='outlined' >Post reply</Button>
+                        </CardContent>
+                </Collapse>
+
 
                 <Snackbar
                     open={this.props.tweet.success}

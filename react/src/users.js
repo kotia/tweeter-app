@@ -10,9 +10,9 @@ const UsersContainer = ({users}) => <Users users={users} />;
 const Users = (props) => {
     const navigate = useNavigate();
 
-        const usersCards = props.users.map((user) =>
-            <Card className={"users-card"} key={user.id}>
-                <CardHeader>{user.username}, {"#" + user.id}</CardHeader>
+
+        const usersCards = props.users.map((user) => <Card className={"users-card"} key={user.id}>
+                <CardHeader title={`${user.username}, #${user.id}`} />
                 <CardActions>
                     <Button onClick={() => navigate('/tweets/' + user.id)} variant='contained'>See the tweets</Button>
                 </CardActions>

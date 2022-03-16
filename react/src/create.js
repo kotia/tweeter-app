@@ -51,10 +51,10 @@ class CreateTweet extends React.Component {
     render() {
         return (
             <Card>
-                <CardHeader>Create new tweet!</CardHeader>
+                <CardHeader title="Create new tweet!" />
                 <CardContent>
-                    <TextField hintText="Tweet Field"
-                               multiLine={true}
+                    <TextField label="Tweet Field"
+                               multiline={true}
                                rows={3}
                                onChange={this.props.actions.onEditText}
                     />
@@ -62,7 +62,7 @@ class CreateTweet extends React.Component {
                 <CardActions>
                     <Button
                         disabled={this.props.tweet.requestProcess}
-                        onClick={this.props.actions.onCreateTweet} >Publish</Button>
+                        onClick={this.props.actions.onCreateTweet}>Publish</Button>
                 </CardActions>
 
                 <Snackbar
