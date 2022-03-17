@@ -27,7 +27,7 @@ class Tweets extends React.Component {
         if (!this.props.tweets.length) {
             tweetsList = <h2>Sorry, no tweets for this user!</h2>
         } else {
-            tweetsList = this.props.tweets.map((tweet) => <TweetContainerCon
+            tweetsList = this.props.tweets.filter(tweet => !tweet.tweetId).map((tweet) => <TweetContainerCon
                 key={tweet.id}
                 tweet={tweet} />);
         }
