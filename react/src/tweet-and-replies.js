@@ -1,70 +1,34 @@
 import * as React from "react";
 import {connect} from "react-redux";
-
+import {useParams} from "react-router-dom";
 import {TweetContainerCon as TweetContainer} from "./tweet.js";
-import AvRepeat from '@mui/icons-material/Repeat';
 
-class TweetAndRepliesContainer extends React.Component {
-    constructor(props){
-        super(props);
-    }
+const TweetAndRepliesContainer = (props) => {
+    const params = useParams();
+    const mainTweet = props.tweets.find((tweet) => tweet.id === params.tweetId);
 
-    render() {
-        let mainTweet = this.props.tweets.find((tweet) => tweet.id === this.props.params.tweetId);
-        let repliedTweets = this.props.tweets.filter((tweet) => tweet.tweetId === this.props.params.tweetId);
-        return (
-            <TweetAndReplies user={this.props.user}
-                             users = {this.props.users}
-                             mainTweet = {mainTweet}
-                             repliedTweets = {repliedTweets}
-            />
-        );
-    }
+    return (
+        <TweetAndReplies user={props.user}
+                         mainTweet={mainTweet}
+        />
+    );
 }
 
-class TweetAndReplies extends React.Component {
-    constructor(props){
-        super(props);
-    }
+const TweetAndReplies = (props) => {
 
-    render() {
-        let tweetsList, mainTweet;
+    const isMainTweet = props.mainTweet;
 
-        if (!this.props.mainTweet) {
-            mainTweet = <h2>Tweet not found!</h2>
-        } else {
-            mainTweet = <TweetContainer
-                user={this.props.user}
-                tweet={this.props.mainTweet} />;
-        }
-
-        if (!this.props.repliedTweets.length) {
-            tweetsList = <h2>Sorry, no replies for this tweet!</h2>
-        } else {
-            tweetsList = this.props.repliedTweets.map((tweet) => <TweetContainer
-                user={this.props.user}
-                key={tweet.id}
-                tweet={tweet} />);
-        }
-
-        return (
-            <div>
-                {mainTweet}
-                <div className="replies-separator">
-                    <AvRepeat style={
-                        {width: '2em', height: '2em', color: '#000'}
-                    }/>
-                    Replies:
-                </div>
-                {tweetsList}
-            </div>
-        );
-    }
+    return (
+        <div>
+            {isMainTweet ? <TweetContainer
+                user={props.user}
+                tweet={props.mainTweet}/> : <h2>Tweet not found!</h2>}
+        </div>
+    );
 }
 
 let mapStateToProps = (store) => ({
     user: store.user,
-    users: store.users,
     tweets: store.tweets
 });
 

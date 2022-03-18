@@ -13,20 +13,16 @@ export function tweeterMiddleware(store) {
         const result = next(action);
 
         if (action.type === actions.INIT_APP) {
-            Promise.all([
-                fetch('/api/getUsers', {method: 'GET'}),
-                fetch('/api/getTweets', {method: 'GET'})
-            ]).then((resp) => Promise.all([resp[0].json(), resp[1].json()])
-            ).then((resp) => {
-                store.dispatch(actions.receiveUsers(resp[0]));
-                store.dispatch(actions.receiveTweets(resp[1]));
+            fetch('/api/getTweets', {method: 'GET'})
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    store.dispatch(actions.receiveTweets(resp));
+                    const savedUserId = window.localStorage.getItem('userId');
 
-                const savedUserId = window.localStorage.getItem('userId');
-
-                if (savedUserId) {
-                    store.dispatch(actions.loginSuccess(savedUserId));
-                }
-            });
+                    if (savedUserId) {
+                        store.dispatch(actions.loginSuccess(savedUserId));
+                    }
+                });
         } else if (action.type === actions.LOGIN) {
             fetch('/api/login', {
                 method: 'post',

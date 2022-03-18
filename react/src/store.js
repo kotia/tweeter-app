@@ -1,8 +1,8 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import {applyMiddleware, combineReducers, createStore} from 'redux'
 import * as actionTypes from './actions.js'
-import { tweeterMiddleware } from './middleware.js'
+import {tweeterMiddleware} from './middleware.js'
 
-const usersReducer = function(state = [], action) {
+const usersReducer = function (state = [], action) {
     if (action.type === actionTypes.RECEIVE_USERS) {
         return action.users.map((user) => ({
             id: user.id,
@@ -15,12 +15,12 @@ const usersReducer = function(state = [], action) {
     }
 };
 
-const userReducer = function(state = {
-        id: -1,
-        requestProcess: false,
-        fail: false,
-        errorText: ''
-    }, action) {
+const userReducer = function (state = {
+    id: -1,
+    requestProcess: false,
+    fail: false,
+    errorText: ''
+}, action) {
     if (action.type === actionTypes.LOGIN) {
         return Object.assign({}, state, {requestProcess: true});
     } else if (action.type === actionTypes.LOGIN_ERROR) {
@@ -40,12 +40,12 @@ const userReducer = function(state = {
     }
 };
 
-const tweetReducer = function(state = {
-        requestProcess: false,
-        fail: false,
-        success: false,
-        errorText: ""
-    }, action) {
+const tweetReducer = function (state = {
+    requestProcess: false,
+    fail: false,
+    success: false,
+    errorText: ""
+}, action) {
     if (action.type === actionTypes.CREATE_TWEET) {
         return Object.assign({}, state, {requestProcess: true, success: false});
     } else if (action.type === actionTypes.CREATE_TWEET_ERROR) {
@@ -68,7 +68,7 @@ const addTweetStatusKeys = () => ({
     errorText: ""
 });
 
-const tweetsReducer = function(state = [], action) {
+const tweetsReducer = function (state = [], action) {
 
     let tweet;
     let newState = state.map((ftweet) => Object.assign({}, ftweet));

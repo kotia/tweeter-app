@@ -2,81 +2,49 @@ import * as React from "react";
 import {connect} from "react-redux";
 
 import Button from '@mui/material/Button';
-import {Card, CardActions, CardHeader, CardContent} from '@mui/material';
+import {Card, CardActions, CardContent, CardHeader} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
 
 
 import {createTweet, defaultStateTweet} from "./actions.js";
+import {useState} from "react";
 
-class CreateTweetContainer extends React.Component {
-    constructor(props){
-        super(props);
+const CreateTweetContainer = (props) => {
+    const [text, setText] = useState('');
 
-        this.state = {
-            text: ""
-        };
+    const onCreateTweet = () => props.onCreateTweet(props.user.id, text);
+    const onEditText = (e) => setText(e.target.value);
+    const onDefaultState = () => props.onDefaultState();
 
-        this.actions = {
-            onCreateTweet: this.onCreateTweet.bind(this),
-            onEditText: this.onEditText.bind(this),
-            onDefaultState: this.onDefaultState.bind(this)
-        };
-    }
+    return <CreateTweet tweet={props.tweet} onCreateTweet={onCreateTweet} onEditText={onEditText} onDefaultState={onDefaultState} />
+};
 
-    onCreateTweet() {
-        this.props.onCreateTweet(this.props.user.id, this.state.text);
-    }
-
-    onEditText(e) {
-        this.setState({text: e.target.value});
-    }
-
-    onDefaultState() {
-        this.props.onDefaultState();
-    }
-
-    render() {
-        return (
-            <CreateTweet actions={this.actions} tweet={this.props.tweet} />
-        );
-    }
-}
-
-class CreateTweet extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
+const CreateTweet = (props) => (
             <Card>
-                <CardHeader title="Create new tweet!" />
+                <CardHeader title="Create new tweet!"/>
                 <CardContent>
                     <TextField label="Tweet Field"
                                multiline={true}
                                rows={3}
-                               onChange={this.props.actions.onEditText}
+                               onChange={props.onEditText}
                     />
                 </CardContent>
                 <CardActions>
                     <Button
-                        disabled={this.props.tweet.requestProcess}
-                        onClick={this.props.actions.onCreateTweet}>Publish</Button>
+                        disabled={props.tweet.requestProcess}
+                        onClick={props.onCreateTweet}>Publish</Button>
                 </CardActions>
 
                 <Snackbar
-                    open={this.props.tweet.success}
+                    open={props.tweet.success}
                     message="Tweet created!"
                     autoHideDuration={4000}
-                    onRequestClose={this.props.actions.onDefaultState}
+                    onRequestClose={props.onDefaultState}
                 />
 
             </Card>
-        )
-
-    }
-}
+        );
 
 const mapStateToProps = (store) => ({
     user: store.user,

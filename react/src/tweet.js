@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {editTweet, removeTweet, createTweet, defaultStateTweet} from "./actions.js";
+import {createTweet, defaultStateTweet, editTweet, removeTweet} from "./actions.js";
 import {connect} from "react-redux";
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 
-import {Card, CardActions, CardHeader, CardContent, Collapse} from '@mui/material';
+import {Card, CardActions, CardContent, CardHeader, Collapse, Tooltip} from '@mui/material';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ActionDelete from '@mui/icons-material/Delete';
@@ -37,13 +37,13 @@ const TweetContainer = (props) => {
     const childTweets = props.tweets.filter(tweet => props.tweet.id === tweet.tweetId);
 
     return (
-        <Tweet tweet = {props.tweet}
+        <Tweet tweet={props.tweet}
                childTweets={childTweets}
-               editing = {isEditing}
-               editedText = {editedText}
-               expanded = {isExpanded}
-               user = {props.user}
-               author = {author}
+               editing={isEditing}
+               editedText={editedText}
+               expanded={isExpanded}
+               user={props.user}
+               author={author}
                onDefaultState={onDefaultState}
                onToggleExpand={onToggleExpand}
                onRemove={onRemove}
@@ -58,92 +58,100 @@ const TweetContainer = (props) => {
 };
 
 const Tweet = (props) => {
-        let isAuthor = props.user.id === props.tweet.userId;
+    let isAuthor = props.user.id === props.tweet.userId;
 
-        return (
-            <Card
-                className="users-card">
-                <CardHeader title={(
-                    <>
-                        tweet #<Link to={"/tweet/" + props.tweet.id}>{props.tweet.id}</Link>
-                        <br />
-                        By <Link to={"/tweets/" + props.author.id}>{props.author.username}</Link>
-                    </>
-                )} />
+    return (
+        <Card
+            className="users-card">
+            <CardHeader title={(
+                <>
+                    tweet #<Link to={"/tweet/" + props.tweet.id}>{props.tweet.id}</Link>
+                    <br/>
+                    By <Link to={"/tweets/" + props.author.id}>{props.author.username}</Link>
+                </>
+            )}/>
 
-                <CardActions>
-                    <IconButton
-                        onClick={props.onRemove}
-                        size='small'
-                        disabled={!isAuthor || props.tweet.isEditing}
-                        tooltip="Delete this tweet">
-                        <ActionDelete />
+            <CardActions>
+                <Tooltip title="Delete this tweet">
+                        <span>
+                            <IconButton
+                                onClick={props.onRemove}
+                                size='small'
+                                disabled={!isAuthor || props.tweet.isEditing}>
+                            <ActionDelete/>
+                        </IconButton>
+                        </span>
+                </Tooltip>
+
+                <Tooltip title="Edit tweet">
+                        <span>
+                            <IconButton
+                                onClick={props.onToggleEdit}
+                                size='small'
+                                disabled={!isAuthor || props.tweet.isEditing}>
+                        <EditorModeEdit/>
                     </IconButton>
-                    <IconButton
-                        onClick={props.onToggleEdit}
-                        size='small'
-                        disabled={!isAuthor || props.tweet.isEditing}
-                        tooltip="Edit tweet">
-                        <EditorModeEdit />
-                    </IconButton>
-                </CardActions>
+                        </span>
+
+                </Tooltip>
+            </CardActions>
+            <CardContent>
+                {props.editing ? (
+                    <div>
+                        <TextField label="Edit Tweet"
+                                   onChange={props.onEditEdit}
+                                   multiline={true}
+                                   rows={3}>{props.editedText}</TextField> <br/>
+                        <Button disabled={props.tweet.editing}
+                                variant='contained'
+                                onClick={props.onEdit}>Save Edited</Button>
+                    </div>
+                ) : (<div className="tweet-text">{props.tweet.text}</div>)}
+            </CardContent>
+
+            <CardActions>
+                <Button
+                    variant='contained'
+                    onClick={props.onToggleExpand}>reply</Button>
+            </CardActions>
+            <Collapse in={props.expanded}>
                 <CardContent>
-                    {props.editing ? (
-                        <div>
-                            <TextField label="Edit Tweet"
-                                       onChange={props.onEditEdit}
-                                       multiline={true}
-                                       rows={3} >{props.editedText}</TextField> <br />
-                            <Button disabled={props.tweet.editing}
-                                    variant='contained'
-                                    onClick={props.onEdit} >Save Edited</Button>
-                        </div>
-                    ) : (<div className="tweet-text">{props.tweet.text}</div>)}
+                    <TextField label="Reply Field"
+                               onChange={props.onEditReply}
+                               multiline={true}
+                               rows={3}/>
                 </CardContent>
-
-                <CardActions>
+                <CardContent>
                     <Button
-                        variant='contained'
-                        onClick={props.onToggleExpand} >reply</Button>
-                </CardActions>
-                <Collapse in = {props.expanded}>
-                        <CardContent>
-                            <TextField label="Reply Field"
-                                       onChange={props.onEditReply}
-                                       multiline={true}
-                                       rows={3} />
-                        </CardContent>
-                        <CardContent>
-                            <Button
-                                disabled={props.tweet.editing}
-                                onClick={props.onReply}
-                                variant='outlined' >Post reply</Button>
-                        </CardContent>
-                </Collapse>
+                        disabled={props.tweet.editing}
+                        onClick={props.onReply}
+                        variant='outlined'>Post reply</Button>
+                </CardContent>
+            </Collapse>
 
-                {props.childTweets.map(childTweet =>
-                    <CardContent key={childTweet.id}>
-                        <TweetContainerCon tweet={childTweet} />
-                    </CardContent>
-                )}
+            {props.childTweets.map(childTweet =>
+                <CardContent key={childTweet.id}>
+                    <TweetContainerCon tweet={childTweet}/>
+                </CardContent>
+            )}
 
 
-                <Snackbar
-                    open={props.tweet.success}
-                    message="Tweet added!"
-                    autoHideDuration={4000}
-                    onClose={props.onDefaultState}
-                />
+            <Snackbar
+                open={props.tweet.success}
+                message="Tweet added!"
+                autoHideDuration={4000}
+                onClose={props.onDefaultState}
+            />
 
-                <Snackbar
-                    open={props.tweet.edit_success}
-                    message="Tweet edited!"
-                    autoHideDuration={4000}
-                    onClose={props.onDefaultState}
-                />
-            </Card>
-        );
-    };
+            <Snackbar
+                open={props.tweet.edit_success}
+                message="Tweet edited!"
+                autoHideDuration={4000}
+                onClose={props.onDefaultState}
+            />
+        </Card>
+    );
+};
 
 let mapTweetStateToProps = (store) => ({
     tweets: store.tweets,

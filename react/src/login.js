@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 import styled from "@emotion/styled";
 import Card from "@mui/material/Card";
@@ -64,13 +64,13 @@ const Login = props => {
 
     return (
         <Card className="login-form">
-            <CardHeader title="Please, Log in or Register" />
+            <CardHeader title="Please, Log in or Register"/>
             <TextFields>
                 <TextField
                     label="Username"
                     onChange={props.onChangeUsername}
                     className="login-field"/>
-                <br />
+                <br/>
                 <TextField
                     label="Password"
                     type="password"
