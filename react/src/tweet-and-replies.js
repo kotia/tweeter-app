@@ -2,13 +2,16 @@ import * as React from "react";
 import {connect} from "react-redux";
 import {useParams} from "react-router-dom";
 import {TweetContainerCon as TweetContainer} from "./tweet.js";
+import {useStore} from "./StoreContext";
 
 const TweetAndRepliesContainer = (props) => {
     const params = useParams();
+    const {data: {user}} = useStore();
+
     const mainTweet = props.tweets.find((tweet) => tweet.id === params.tweetId);
 
     return (
-        <TweetAndReplies user={props.user}
+        <TweetAndReplies user={user}
                          mainTweet={mainTweet}
         />
     );
@@ -21,14 +24,12 @@ const TweetAndReplies = (props) => {
     return (
         <div>
             {isMainTweet ? <TweetContainer
-                user={props.user}
                 tweet={props.mainTweet}/> : <h2>Tweet not found!</h2>}
         </div>
     );
 }
 
 let mapStateToProps = (store) => ({
-    user: store.user,
     tweets: store.tweets
 });
 

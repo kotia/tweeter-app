@@ -1,23 +1,24 @@
-import * as React from "react";
+import React, {useState} from "react";
 import {connect} from "react-redux";
-
-import Button from '@mui/material/Button';
-import {Card, CardActions, CardContent, CardHeader} from '@mui/material';
-import TextField from '@mui/material/TextField';
-import Snackbar from '@mui/material/Snackbar';
-
+import {Card, CardActions, CardContent, CardHeader, TextField, Snackbar, Button} from '@mui/material';
 
 import {createTweet, defaultStateTweet} from "./actions.js";
-import {useState} from "react";
+import {useStore} from "./StoreContext";
 
 const CreateTweetContainer = (props) => {
+    const {data: {user}} = useStore();
     const [text, setText] = useState('');
 
-    const onCreateTweet = () => props.onCreateTweet(props.user.id, text);
+    const onCreateTweet = () => props.onCreateTweet(user.id, text);
     const onEditText = (e) => setText(e.target.value);
     const onDefaultState = () => props.onDefaultState();
 
-    return <CreateTweet tweet={props.tweet} onCreateTweet={onCreateTweet} onEditText={onEditText} onDefaultState={onDefaultState} />
+    return <CreateTweet
+        tweet={props.tweet}
+        onCreateTweet={onCreateTweet}
+        onEditText={onEditText}
+        onDefaultState={onDefaultState}
+    />
 };
 
 const CreateTweet = (props) => (
@@ -47,7 +48,6 @@ const CreateTweet = (props) => (
         );
 
 const mapStateToProps = (store) => ({
-    user: store.user,
     tweet: store.tweet,
     tweets: store.tweets
 });

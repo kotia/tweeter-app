@@ -2,38 +2,39 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import Button from '@mui/material/Button';
-import {initApp, logout} from './actions.js';
+import {initApp} from './actions.js';
 import {useStore} from "./StoreContext";
 
 const AppContainer = props => {
 
-    const store = useStore();
+    const {actions: {getUsers, logout}, data: {user, users}} = useStore();
 
     useEffect(() => {
         props.onInit();
-        store.actions.getUsers();
+        getUsers();
     }, []);
 
     return (
-        <App user={props.user}
-             users={store.data.users}
+        <App user={user}
+             users={users}
              children={props.children}
-             logout={props.onLogout}
+             logout={logout}
         />
     );
 
 };
 
 const App = props => {
-    let username, topbarGreeting;
+    let topbarGreeting;
 
     const navigate = useNavigate();
 
     if (props.user.id < 0 || !props.users.length) {
         topbarGreeting = <Button onClick={() => navigate('/login')} primary="true">Login or register</Button>;
     } else {
-        username = props.users.find(user => user.id === props.user.id).username;
-        topbarGreeting = (
+        const username = props.users.find(user => +user.id === +props.user.id)?.username;
+
+        topbarGreeting = username ? (
             <div>
                 <div
                     className="username-greeting"
@@ -59,7 +60,7 @@ const App = props => {
                     }}
                 >Logout</Button>
             </div>
-        )
+        ) : null;
     }
 
     return (
@@ -70,14 +71,8 @@ const App = props => {
     );
 };
 
-const mapStateToProps = store => ({
-    user: store.user,
-    users: store.users
-});
-
 const mapDispatchToProps = dispatch => ({
-    onLogout: () => dispatch(logout()),
     onInit: () => dispatch(initApp())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
+export default connect(null, mapDispatchToProps)(AppContainer);

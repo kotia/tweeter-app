@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {connect} from "react-redux";
 import {useNavigate} from 'react-router-dom';
 
 import styled from "@emotion/styled";
@@ -10,33 +9,33 @@ import CardContent from "@mui/material/CardContent";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import {login, register} from "./actions.js";
+import {useStore} from "./StoreContext";
 
-const LoginContainer = props => {
+const LoginContainer = () => {
 
     const navigate = useNavigate();
+    const {data: {user}, actions: {login, register}} = useStore();
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [previousUserId, setPreviousUserId] = useState(props.user.id);
+    const [previousUserId, setPreviousUserId] = useState(user.id);
 
     useEffect(() => {
-        setPreviousUserId(props.user.id);
-        if (+previousUserId < 0 && +props.user.id >= 0) {
+        setPreviousUserId(user.id);
+        if (+previousUserId < 0 && +user.id >= 0) {
             navigate('/');
         }
-    }, [props.user]);
+    }, [user]);
 
-    const login = () => {
+    const onLogin = () => {
         if (username && password) {
-            props.onLogin(username, password);
+            login(username, password);
         }
-
     };
 
-    const register = () => {
+    const onRegister = () => {
         if (username && password) {
-            props.onRegister(username, password);
+            register(username, password);
         }
     };
 
@@ -48,11 +47,11 @@ const LoginContainer = props => {
     return (
         <div>
             <Login
-                user={props.user}
+                user={user}
                 onChangeUsername={onChangeUsername}
                 onChangePassword={onChangePassword}
-                login={login}
-                register={register}
+                login={onLogin}
+                register={onRegister}
                 username={username}
                 password={password}/>
         </div>
@@ -98,17 +97,4 @@ const TextFields = styled(CardContent)`
   gap: 10px;
 `;
 
-const mapStateToProps = store => ({
-    user: store.user
-});
-
-const mapDispatchToProps = dispatch => ({
-    onRegister(username, password) {
-        dispatch(register(username, password));
-    },
-    onLogin(username, password) {
-        dispatch(login(username, password));
-    }
-});
-
-export const LoginContainerCon = connect(mapStateToProps, mapDispatchToProps)(LoginContainer);
+export const LoginContainerCon = LoginContainer;

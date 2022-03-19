@@ -10,9 +10,11 @@ import ActionDelete from '@mui/icons-material/Delete';
 import EditorModeEdit from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
+import {useStore} from "./StoreContext";
 
 const TweetContainer = (props) => {
 
+    const {data: {user, users}} = useStore();
     const [isEditing, setIsEditing] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [editedText, setEditedText] = useState(props.tweet.text);
@@ -31,18 +33,18 @@ const TweetContainer = (props) => {
         props.onEditTweet(props.tweet.id, editedText);
     };
     const onEditReply = (e) => setReplyText(e.target.value);
-    const onReply = () => props.onReplyTweet(props.user.id, replyText, props.tweet.id);
+    const onReply = () => props.onReplyTweet(user.id, replyText, props.tweet.id);
 
-    const author = props.users.find((user) => user.id === props.tweet.userId);
+    const author = users.find(user => +user.id === +props.tweet.userId);
     const childTweets = props.tweets.filter(tweet => props.tweet.id === tweet.tweetId);
 
-    return (
+    return author ? (
         <Tweet tweet={props.tweet}
                childTweets={childTweets}
                editing={isEditing}
                editedText={editedText}
                expanded={isExpanded}
-               user={props.user}
+               user={user}
                author={author}
                onDefaultState={onDefaultState}
                onToggleExpand={onToggleExpand}
@@ -53,7 +55,7 @@ const TweetContainer = (props) => {
                onEditReply={onEditReply}
                onReply={onReply}
         />
-    );
+    ) : null;
 
 };
 
@@ -154,9 +156,7 @@ const Tweet = (props) => {
 };
 
 let mapTweetStateToProps = (store) => ({
-    tweets: store.tweets,
-    users: store.users,
-    user: store.user
+    tweets: store.tweets
 });
 
 let mapTweetDispatchToProps = (dispatch) => ({
