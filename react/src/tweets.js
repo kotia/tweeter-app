@@ -1,13 +1,12 @@
 import React from "react";
-import {connect} from "react-redux";
 import {useParams} from "react-router-dom";
 
-import {TweetContainerCon} from "./tweet.js";
-import {useStore} from "./StoreContext";
+import {TweetContainer} from "./tweet.js";
+import {useStore} from "./hooks/StoreContext";
 
-const TweetsContainer = ({tweets}) => {
+export const TweetsContainer = () => {
     const {userId} = useParams();
-    const {data: {users}} = useStore();
+    const {data: {users, tweets}} = useStore();
     const filteredTweets = tweets.filter((tweet) => tweet.userId === userId);
 
 
@@ -29,9 +28,10 @@ class Tweets extends React.Component {
         if (!this.props.tweets.length) {
             tweetsList = <h2>Sorry, no tweets for this user!</h2>
         } else {
-            tweetsList = this.props.tweets.filter(tweet => !tweet.tweetId).map((tweet) => <TweetContainerCon
+            tweetsList = this.props.tweets.filter(tweet => !tweet.tweetId).map((tweet) => <TweetContainer
                 key={tweet.id}
-                tweet={tweet}/>);
+                tweetId={tweet.id}
+            />);
         }
 
         return (
@@ -41,9 +41,3 @@ class Tweets extends React.Component {
         );
     }
 }
-
-let mapStateToProps = (store) => ({
-    tweets: store.tweets
-});
-
-export const TweetsContainerCon = connect(mapStateToProps)(TweetsContainer);

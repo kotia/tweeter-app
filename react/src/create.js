@@ -1,23 +1,20 @@
 import React, {useState} from "react";
-import {connect} from "react-redux";
 import {Card, CardActions, CardContent, CardHeader, TextField, Snackbar, Button} from '@mui/material';
 
-import {createTweet, defaultStateTweet} from "./actions.js";
-import {useStore} from "./StoreContext";
+import {useStore} from "./hooks/StoreContext";
 
-const CreateTweetContainer = (props) => {
-    const {data: {user}} = useStore();
+export const CreateTweetContainer = () => {
+    const {data: {user, tweetState}, actions: {createTweet, setDefaultTweetState}} = useStore();
     const [text, setText] = useState('');
 
-    const onCreateTweet = () => props.onCreateTweet(user.id, text);
+    const onCreateTweet = () => createTweet(user.id, text);
     const onEditText = (e) => setText(e.target.value);
-    const onDefaultState = () => props.onDefaultState();
 
     return <CreateTweet
-        tweet={props.tweet}
+        tweet={tweetState}
         onCreateTweet={onCreateTweet}
         onEditText={onEditText}
-        onDefaultState={onDefaultState}
+        onDefaultState={setDefaultTweetState}
     />
 };
 
@@ -33,7 +30,7 @@ const CreateTweet = (props) => (
                 </CardContent>
                 <CardActions>
                     <Button
-                        disabled={props.tweet.requestProcess}
+                        disabled={props.tweet.adding}
                         onClick={props.onCreateTweet}>Publish</Button>
                 </CardActions>
 
@@ -41,21 +38,9 @@ const CreateTweet = (props) => (
                     open={props.tweet.success}
                     message="Tweet created!"
                     autoHideDuration={4000}
-                    onRequestClose={props.onDefaultState}
+                    onClose={props.onDefaultState}
                 />
 
             </Card>
         );
-
-const mapStateToProps = (store) => ({
-    tweet: store.tweet,
-    tweets: store.tweets
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    onCreateTweet: (id, text) => dispatch(createTweet(id, text)),
-    onDefaultState: () => dispatch(defaultStateTweet())
-});
-
-export const CreateTweetContainerCon = connect(mapStateToProps, mapDispatchToProps)(CreateTweetContainer);
 

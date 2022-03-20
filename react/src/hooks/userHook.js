@@ -34,7 +34,7 @@ export function useUser() {
 
         const registerResponse = await response.json();
 
-        if (registerResponse.error) {
+        if (registerResponse.result === 'error') {
             setUser(currentUser => ({
                 ...currentUser,
                 requestProcess: false,
@@ -71,9 +71,9 @@ export function useUser() {
             })
         });
 
-        const loginResponse = response.json();
+        const loginResponse = await response.json();
 
-        if (loginResponse.error) {
+        if (loginResponse.result === 'error') {
             setUser(currentUser => ({
                 ...currentUser,
                 requestProcess: false,

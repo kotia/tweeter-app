@@ -1,6 +1,4 @@
-import React, {useState} from "react";
-import {createTweet, defaultStateTweet, editTweet, removeTweet} from "./actions.js";
-import {connect} from "react-redux";
+import React, {useState, useEffect} from "react";
 import {Link} from 'react-router-dom'
 
 import {Card, CardActions, CardContent, CardHeader, Collapse, Tooltip} from '@mui/material';
@@ -10,36 +8,54 @@ import ActionDelete from '@mui/icons-material/Delete';
 import EditorModeEdit from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
-import {useStore} from "./StoreContext";
+import {useStore} from "./hooks/StoreContext";
 
-const TweetContainer = (props) => {
+export const TweetContainer = ({tweetId}) => {
 
-    const {data: {user, users}} = useStore();
+    const {data: {
+        user,
+        users,
+        tweets,
+        tweetState
+    }, actions: {
+        createTweet,
+        editTweet,
+        removeTweet,
+        setDefaultTweetState
+    }} = useStore();
+
+    const tweetContent = tweets.find(tweet => tweet.id === tweetId);
+    const author = users.find(user => +user.id === +tweetContent?.userId);
+    const childTweets = tweets.filter(tweet => tweetId === tweet.tweetId);
+
     const [isEditing, setIsEditing] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
-    const [editedText, setEditedText] = useState(props.tweet.text);
+    const [editedText, setEditedText] = useState(tweetContent?.text);
     const [replyText, setReplyText] = useState("");
+
+    useEffect(() => {
+        const tweetContent = tweets.find(tweet => tweet.id === tweetId);
+        setEditedText(tweetContent?.text);
+    }, [tweets, tweetId, setEditedText]);
 
     const onDefaultState = () => {
         setReplyText('');
-        props.defaultState(props.tweet.id);
+        setDefaultTweetState();
     }
     const onToggleExpand = () => setIsExpanded(isExpanded => !isExpanded);
-    const onRemove = () => props.onRemoveTweet(props.tweet.id);
+    const onRemove = () => removeTweet(tweetId);
     const onToggleEdit = () => setIsEditing(isEditing => !isEditing);
     const onEditEdit = (e) => setEditedText(e.target.value);
     const onEdit = () => {
         setIsEditing(false);
-        props.onEditTweet(props.tweet.id, editedText);
+        editTweet(tweetId, editedText);
     };
     const onEditReply = (e) => setReplyText(e.target.value);
-    const onReply = () => props.onReplyTweet(user.id, replyText, props.tweet.id);
-
-    const author = users.find(user => +user.id === +props.tweet.userId);
-    const childTweets = props.tweets.filter(tweet => props.tweet.id === tweet.tweetId);
+    const onReply = () => createTweet(user.id, replyText, tweetId);
 
     return author ? (
-        <Tweet tweet={props.tweet}
+        <Tweet tweet={tweetContent}
+               tweetState={tweetState}
                childTweets={childTweets}
                editing={isEditing}
                editedText={editedText}
@@ -79,7 +95,7 @@ const Tweet = (props) => {
                             <IconButton
                                 onClick={props.onRemove}
                                 size='small'
-                                disabled={!isAuthor || props.tweet.isEditing}>
+                                disabled={!isAuthor || props.tweetState.editing}>
                             <ActionDelete/>
                         </IconButton>
                         </span>
@@ -90,7 +106,7 @@ const Tweet = (props) => {
                             <IconButton
                                 onClick={props.onToggleEdit}
                                 size='small'
-                                disabled={!isAuthor || props.tweet.isEditing}>
+                                disabled={!isAuthor || props.tweetState.editing}>
                         <EditorModeEdit/>
                     </IconButton>
                         </span>
@@ -104,7 +120,7 @@ const Tweet = (props) => {
                                    onChange={props.onEditEdit}
                                    multiline={true}
                                    rows={3}>{props.editedText}</TextField> <br/>
-                        <Button disabled={props.tweet.editing}
+                        <Button disabled={props.tweetState.editing}
                                 variant='contained'
                                 onClick={props.onEdit}>Save Edited</Button>
                     </div>
@@ -125,7 +141,7 @@ const Tweet = (props) => {
                 </CardContent>
                 <CardContent>
                     <Button
-                        disabled={props.tweet.editing}
+                        disabled={props.tweetState.editing}
                         onClick={props.onReply}
                         variant='outlined'>Post reply</Button>
                 </CardContent>
@@ -133,37 +149,17 @@ const Tweet = (props) => {
 
             {props.childTweets.map(childTweet =>
                 <CardContent key={childTweet.id}>
-                    <TweetContainerCon tweet={childTweet}/>
+                    <TweetContainer tweetId={childTweet.id}/>
                 </CardContent>
             )}
 
-
             <Snackbar
-                open={props.tweet.success}
+                open={props.tweetState.success}
                 message="Tweet added!"
                 autoHideDuration={4000}
                 onClose={props.onDefaultState}
             />
 
-            <Snackbar
-                open={props.tweet.edit_success}
-                message="Tweet edited!"
-                autoHideDuration={4000}
-                onClose={props.onDefaultState}
-            />
         </Card>
     );
 };
-
-let mapTweetStateToProps = (store) => ({
-    tweets: store.tweets
-});
-
-let mapTweetDispatchToProps = (dispatch) => ({
-    onRemoveTweet: (id) => dispatch(removeTweet(id)),
-    onEditTweet: (id, text) => dispatch(editTweet(id, text)),
-    onReplyTweet: (userId, text, tweetId) => dispatch(createTweet(userId, text, tweetId)),
-    defaultState: (id) => dispatch(defaultStateTweet(id))
-});
-
-export const TweetContainerCon = connect(mapTweetStateToProps, mapTweetDispatchToProps)(TweetContainer);

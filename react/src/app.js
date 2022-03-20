@@ -1,16 +1,14 @@
 import React, {useEffect} from "react";
-import {connect} from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import Button from '@mui/material/Button';
-import {initApp} from './actions.js';
-import {useStore} from "./StoreContext";
+import {useStore} from "./hooks/StoreContext";
 
 const AppContainer = props => {
 
-    const {actions: {getUsers, logout}, data: {user, users}} = useStore();
+    const {actions: {getUsers, logout, getTweets}, data: {user, users}} = useStore();
 
     useEffect(() => {
-        props.onInit();
+        getTweets();
         getUsers();
     }, []);
 
@@ -71,8 +69,4 @@ const App = props => {
     );
 };
 
-const mapDispatchToProps = dispatch => ({
-    onInit: () => dispatch(initApp())
-});
-
-export default connect(null, mapDispatchToProps)(AppContainer);
+export default AppContainer;

@@ -9,9 +9,9 @@ import CardContent from "@mui/material/CardContent";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
-import {useStore} from "./StoreContext";
+import {useStore} from "./hooks/StoreContext";
 
-const LoginContainer = () => {
+export const LoginContainer = () => {
 
     const navigate = useNavigate();
     const {data: {user}, actions: {login, register}} = useStore();
@@ -22,7 +22,8 @@ const LoginContainer = () => {
 
     useEffect(() => {
         setPreviousUserId(user.id);
-        if (+previousUserId < 0 && +user.id >= 0) {
+
+        if (+previousUserId !== +user.id && +user.id >= 0) {
             navigate('/');
         }
     }, [user]);
@@ -96,5 +97,3 @@ const TextFields = styled(CardContent)`
   flex-direction: column;
   gap: 10px;
 `;
-
-export const LoginContainerCon = LoginContainer;

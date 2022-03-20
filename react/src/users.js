@@ -3,7 +3,7 @@ import * as React from "react";
 import {Card, CardActions, CardHeader} from '@mui/material';
 import Button from '@mui/material/Button';
 import {useNavigate} from 'react-router-dom';
-import {useStore} from "./StoreContext";
+import {useStore} from "./hooks/StoreContext";
 
 const UsersContainer = () => {
     const {data: {users}} = useStore();
