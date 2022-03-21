@@ -5,8 +5,13 @@ const defaultTweetState = () => ({
     deleting: false,
     adding: false,
     error: false,
+    editSuccess: false,
+    deleteSuccess: false,
+    addSuccess: false,
     success: false,
-    errorText: ""
+    errorText: "",
+    tweetId: -1,
+    parentTweetId: -1
 });
 
 export function useTweet() {
@@ -18,7 +23,7 @@ export function useTweet() {
             adding: true
         });
 
-        await fetch('/api/addTweet', {
+        const response = await fetch('/api/addTweet', {
             method: 'post',
             headers: {
                 'Accept': 'application/json',
@@ -31,9 +36,14 @@ export function useTweet() {
             })
         });
 
+        const addTweetResponse = await response.json();
+
         setTweetState({
             ...defaultTweetState(),
+            tweetId: addTweetResponse.id,
+            parentTweetId: parentTweetId || -1,
             adding: false,
+            addSuccess: true,
             success: true
         });
     };
@@ -58,7 +68,9 @@ export function useTweet() {
 
         setTweetState({
             ...defaultTweetState(),
+            tweetId: id,
             editing: false,
+            editSuccess: true,
             success: true
         });
     };
@@ -82,7 +94,9 @@ export function useTweet() {
 
         setTweetState({
             ...defaultTweetState(),
+            tweetId: id,
             deleting: false,
+            deleteSuccess: true,
             success: true
         });
     };

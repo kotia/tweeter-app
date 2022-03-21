@@ -35,7 +35,7 @@ const CreateTweet = (props) => (
                 </CardActions>
 
                 <Snackbar
-                    open={props.tweet.success}
+                    open={props.tweet.addSuccess}
                     message="Tweet created!"
                     autoHideDuration={4000}
                     onClose={props.onDefaultState}

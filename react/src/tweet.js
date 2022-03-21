@@ -38,6 +38,13 @@ export const TweetContainer = ({tweetId}) => {
         setEditedText(tweetContent?.text);
     }, [tweets, tweetId, setEditedText]);
 
+    useEffect(() => {
+        if (tweetState.success && tweetId === tweetState.parentTweetId) {
+            setIsExpanded(false);
+            setReplyText("");
+        }
+    }, [tweetState, tweetId, setIsExpanded, setReplyText]);
+
     const onDefaultState = () => {
         setReplyText('');
         setDefaultTweetState();
@@ -72,11 +79,11 @@ export const TweetContainer = ({tweetId}) => {
                onReply={onReply}
         />
     ) : null;
-
 };
 
 const Tweet = (props) => {
-    let isAuthor = props.user.id === props.tweet.userId;
+    const isAuthor = props.user.id === props.tweet.userId;
+    const isCurrentTweetChanging = +props.tweetState.tweetId === +props.tweet.id;
 
     return (
         <Card
@@ -118,8 +125,10 @@ const Tweet = (props) => {
                     <div>
                         <TextField label="Edit Tweet"
                                    onChange={props.onEditEdit}
+                                   value={props.editedText}
                                    multiline={true}
-                                   rows={3}>{props.editedText}</TextField> <br/>
+                                   rows={3} />
+                        <br/>
                         <Button disabled={props.tweetState.editing}
                                 variant='contained'
                                 onClick={props.onEdit}>Save Edited</Button>
@@ -154,8 +163,22 @@ const Tweet = (props) => {
             )}
 
             <Snackbar
-                open={props.tweetState.success}
+                open={props.tweetState.addSuccess && isCurrentTweetChanging}
                 message="Tweet added!"
+                autoHideDuration={4000}
+                onClose={props.onDefaultState}
+            />
+
+            <Snackbar
+                open={props.tweetState.editSuccess && isCurrentTweetChanging}
+                message="Tweet edited!"
+                autoHideDuration={4000}
+                onClose={props.onDefaultState}
+            />
+
+            <Snackbar
+                open={props.tweetState.deleteSuccess && isCurrentTweetChanging}
+                message="Tweet deleted!"
                 autoHideDuration={4000}
                 onClose={props.onDefaultState}
             />
