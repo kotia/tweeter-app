@@ -5,8 +5,8 @@ WORKDIR /home/node/app
 
 ADD / /home/node/app/
 
-RUN yarn
+RUN npm i
 
-RUN yarn build
+RUN npm run build
 
-CMD ["yarn", "start"]
+CMD ["npm", "run", "dev"]

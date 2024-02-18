@@ -1,0 +1,14 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 1em;
+}
+
+.error {
+  color: red;
+}
