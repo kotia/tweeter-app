@@ -28,7 +28,7 @@ services:
   react:
     build: ./react
     volumes:
-      - "build:/home/node/app/build"
+      - "build:/home/node/app/dist"
       - "./react:/home/node/app/"
       - "fe-node-modules:/home/node/app/node_modules/"
     ports:
