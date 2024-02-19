@@ -52,7 +52,7 @@ const TweetContainer: FC<ITweetProps> = ({id}) => {
                 {canEdit && !editMode && <div><IconButton onClick={startEdit}><Edit /></IconButton><DeleteTweet id={tweet.id} /></div>}
                 {editMode && <EditTweet id={tweet.id} close={cancelEdit} />}
             </CardContent>
-            {!replyMode && <CardActions>
+            {!replyMode && !!user && <CardActions>
                 <Button onClick={startReply}>Reply</Button>
             </CardActions>}
             {replyMode && <ReplyTweet parentId={id} close={cancelReply} />}

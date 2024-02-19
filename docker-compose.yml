@@ -1,9 +1,10 @@
 version: '3.8'
 services:
   static:
-    build: ./nginx
+    image: nginx:1.19.2
     volumes:
       - "build:/usr/share/nginx/another"
+      - "${PWD}/nginx/nginx.conf:/etc/nginx/nginx.conf"
     ports:
       - "5001:80"
     links:
